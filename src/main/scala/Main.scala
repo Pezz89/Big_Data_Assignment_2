@@ -15,42 +15,47 @@ object Main {
 
   def main(args: Array[String]) {
     KMeans.run()
-    DataParser.ParseData()
+    val df = DataParser.ParseData(sc, sqlContext)
   }
 
   object DataParser {
+    def ParseData(sparkc: SparkContext, sqlc: SQLContext) : Array[DataFrame] = {
 
-    // case class BadgeRow(i: String, j: String, k: String, m: String)
-    // case class VotesRow(i: String, j: String, k: String, m: String, m: String)
-    // case class CommentsRow(i: String, j: String, k: String, m: String)
-    //case class BadgeRow(i: String, j: String, k: String, m: String)
-    //case class BadgeRow(i: String, j: String, k: String, m: String)
-
-    def ParseData() {
-      // The schema is encoded in a string
-      var schemaString = "Id UserId Name Date"
-
-      // Generate the schema based on the string of schema
-      var fields = schemaString.split(" ")
-        .map(fieldName => StructField(fieldName, StringType, nullable = true))
-      var schema = StructType(fields)
-      var rdd = ParseInput("../stackoverflow_dataset/badges.txt", schemaString)
-      val badgeData = sqlContext.createDataFrame(rdd, schema)
-      badgeData.show()
+      val xmlInfos = Array(
+        ("../stackoverflow_dataset/badges.txt", "Id UserId Name Date"),
+        ("../stackoverflow_dataset/comments.txt", "Id PostId Score Text CreationDate UserId"),
+        ("../stackoverflow_dataset/posts.txt", "Id PostTypeId ParentID AcceptedAnswerId CreationDate Score ViewCount Body OwnerUserId LastEditorUserId LastEditorDisplayName LastEditDate LastActivityDate CommunityOwnedDate ClosedDate Title Tags AnswerCount CommentCount FavoriteCount"),
+        ("../stackoverflow_dataset/postHistory.txt","Id PostHistoryTypeId PostId RevisionGUID CreationDate UserId UserDisplayName Comment Text CloseReasonId"),
+        ("../stackoverflow_dataset/postLinks.txt", "Id CreationDate PostId RelatedPostId PostLinkTypeId"),
+        ("../stackoverflow_dataset/users.txt", "Reputation CreationDate DisplayName EmailHash LastAccessDate WebsiteUrl Location Age AboutMe Views UpVotes DownVotes"),
+        ("../stackoverflow_dataset/votes.txt", "Id PostId VoteTypeId UserId CreationDate")
+      )
       
-      // The schema is encoded in a string
-      schemaString = "Id PostId VoteTypeId UserId CreationDate"
+      
+      val parsedData = xmlInfos.map(x => ParseXMLInfo(x))
 
+      for(i <- 0 until parsedData.length){
+        parsedData(i).show()
+      }
+      return parsedData
+    }
+
+    private def ParseXMLInfo(xmlInfo: (String, String)) : DataFrame = {
+      // The schema is encoded in a string
+      var schemaString = xmlInfo._2
+      var schema = GenerateSchemaFromString(schemaString)
+      var rdd = ParseInput(xmlInfo._1, schemaString)
+      var data = sqlContext.createDataFrame(rdd, schema)
+      return data
+
+    }
+
+    private def GenerateSchemaFromString(schemaString: String) : StructType = {
       // Generate the schema based on the string of schema
-      fields = schemaString.split(" ")
+      val fields = schemaString.split(" ")
         .map(fieldName => StructField(fieldName, StringType, nullable = true))
-      schema = StructType(fields)
-      rdd = ParseInput("../stackoverflow_dataset/votes.txt", schemaString)
-      val voteData = sqlContext.createDataFrame(rdd, schema)
-      voteData.show()
-      // ParseInput("../stackoverflow_dataset/comments.txt")
-      // ParseInput("../stackoverflow_dataset/postHistory.txt")
-      // ParseInput("../stackoverflow_dataset/postLinks.txt")
+      val schema = StructType(fields)
+      return schema
     }
 
     private def ParseInput(inputFilepath: String, schemaString: String) : RDD[Row] = {
@@ -64,7 +69,6 @@ object Main {
       val xmlLine = scala.xml.XML.loadString(line)
       var lineData = schemaString.split(" ").map(fieldName => getXMLAttribute(xmlLine, fieldName))
 
-      println(lineData)
       return Row.fromSeq(lineData)
     }
 
@@ -77,5 +81,6 @@ object Main {
     }
   }
 }
+
 
 
