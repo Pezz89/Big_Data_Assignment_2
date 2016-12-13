@@ -9,11 +9,16 @@ object SparkKMeans {
     val sc = new SparkContext(new SparkConf().setAppName("Spark KMeans"))
     
     val lines = sc.textFile(args(0))
+
+    lines.foreach(println)
     //val lines = sc.textFile("hdfs://moonshot-ha-nameservice" + args(0))
 
-    val ages = lines.map(getAge)
+    //val ages = lines.map(getAge)
 
-    ages.foreach(println)
+
+    //ages.foreach(println)
+
+
 
     //transformations from the original input data
     //val words = lines.flatMap(line => line.split("[ .,;:()]+"))
@@ -27,8 +32,8 @@ object SparkKMeans {
      
   }
 
-  def getAge(String line) : String {
-    val age = ((line.split("Age="))[1]).substring(1,3)
-    return age
+  def getAge(line :String) : String = {
+    //return ((line.split("Age="))(1)).substring(1,3)
+    return (line.split("Age="))(1)
   }
 }
