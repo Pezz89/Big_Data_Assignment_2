@@ -37,3 +37,5 @@ external/
 CMakeFiles/
 
 mlib.scala
+
+/.stackoverflow_dataset
