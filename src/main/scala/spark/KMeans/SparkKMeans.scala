@@ -9,19 +9,26 @@ object SparkKMeans {
     val sc = new SparkContext(new SparkConf().setAppName("Spark KMeans"))
     
     val lines = sc.textFile(args(0))
-    val ages = lines.map(getAge)
+    val featureSet = lines.map(getFeatures)
 
-    ages.foreach(println)
+    featureSet.foreach(println)
      
   }
 
-  def getAge(line :String) : String = {
+  def getFeatures(line :String) : [String] = {
+
+  	val featureIDs = [" rowID="," Reputation="," CreationDate="," LastAccessDate="," Views="," UpVotes="," DownVotes="," Age="]
     val fragments = line.split("\"")
-    var age = "0"
-    if (fragments.contains(" Age=")) {
-      val index = fragments.indexOf(" Age=")
-      age = fragments(index + 1)
+    var features = []
+
+    for (a <- 0 to 7) {
+    	if (fragments.contains(featureIDs(a))) {
+    		val index = fragments.indexOf(featureIDs(a))
+            features(a) = fragments(index + 1)
+        } else {
+        	features(a) = ""
+        }
     }
-    return age
+    return features
   }
 }
