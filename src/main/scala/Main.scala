@@ -24,6 +24,8 @@ object Main {
     // for easy access to data elements.
     val df = DataParser.ParseData()
 
-    KMeans.run()
+    // get the users XML file
+    val users = df("users")
+    users.show()
   }
 }

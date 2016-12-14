@@ -18,27 +18,22 @@ object DataParser {
   /*
    * Generate array of DataFrames from XML content
    */
-  def ParseData() : Array[DataFrame] = {
+  def ParseData() : Map[String, DataFrame] = {
 
     // Define XML file locations and a string of attribute tags to retrieve
     // from each xml element.
     val xmlInfos = Array(
-      ("../stackoverflow_dataset/badges.txt", "Id UserId Name Date"),
-      ("../stackoverflow_dataset/comments.txt", "Id PostId Score Text CreationDate UserId"),
-      ("../stackoverflow_dataset/posts.txt", "Id PostTypeId ParentID AcceptedAnswerId CreationDate Score ViewCount Body OwnerUserId LastEditorUserId LastEditorDisplayName LastEditDate LastActivityDate CommunityOwnedDate ClosedDate Title Tags AnswerCount CommentCount FavoriteCount"),
-      ("../stackoverflow_dataset/postHistory.txt","Id PostHistoryTypeId PostId RevisionGUID CreationDate UserId UserDisplayName Comment Text CloseReasonId"),
-      ("../stackoverflow_dataset/postLinks.txt", "Id CreationDate PostId RelatedPostId PostLinkTypeId"),
-      ("../stackoverflow_dataset/users.txt", "Reputation CreationDate DisplayName EmailHash LastAccessDate WebsiteUrl Location Age AboutMe Views UpVotes DownVotes"),
-      ("../stackoverflow_dataset/votes.txt", "Id PostId VoteTypeId UserId CreationDate")
+      ("badges", "../stackoverflow_dataset/badges.txt", "Id UserId Name Date"),
+      ("comments", "../stackoverflow_dataset/comments.txt", "Id PostId Score Text CreationDate UserId"),
+      ("posts", "../stackoverflow_dataset/posts.txt", "Id PostTypeId ParentID AcceptedAnswerId CreationDate Score ViewCount Body OwnerUserId LastEditorUserId LastEditorDisplayName LastEditDate LastActivityDate CommunityOwnedDate ClosedDate Title Tags AnswerCount CommentCount FavoriteCount"),
+      ("postHistory", "../stackoverflow_dataset/postHistory.txt","Id PostHistoryTypeId PostId RevisionGUID CreationDate UserId UserDisplayName Comment Text CloseReasonId"),
+      ("postLinks", "../stackoverflow_dataset/postLinks.txt", "Id CreationDate PostId RelatedPostId PostLinkTypeId"),
+      ("users", "../stackoverflow_dataset/users.txt", "Reputation CreationDate DisplayName EmailHash LastAccessDate WebsiteUrl Location Age AboutMe Views UpVotes DownVotes"),
+      ("votes", "../stackoverflow_dataset/votes.txt", "Id PostId VoteTypeId UserId CreationDate")
     )
     
     // Store each file's DataFrame in an array of DataFrames.
-    val parsedData = xmlInfos.map(x => ParseXMLInfo(x))
-
-    // Display a subset of each DataFrame's data in a table
-    for(i <- 0 until parsedData.length){
-      parsedData(i).show()
-    }
+    val parsedData = xmlInfos.map(x => (x._1, ParseXMLInfo((x._2, x._3)))).toMap
 
     return parsedData
   }
