@@ -22,10 +22,10 @@ object Main {
   def main(args: Array[String]) {
     // Retrieve data from StackOverflow dataset XMLs. Format into DataFrames
     // for easy access to data elements.
-    val df = DataParser.ParseData()
+    val dataFrames = DataParser.ParseData()
 
     // get the users XML file
-    val users = df("users")
+    val users = dataFrames("users")
     users.persist()
     // Show 20 entries from the user dataset
     users.show()
@@ -34,11 +34,9 @@ object Main {
     users.show()
 
     // create new dataframe with only the reputation of the users
-    users.select("CreationDate").distinct.show()
+    users.select("CreationDate").show()
 
     // Info on using DataFrames here: https://www.mapr.com/blog/using-apache-spark-dataframes-processing-tabular-data
-
-
   }
 }
 

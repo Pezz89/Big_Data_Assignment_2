@@ -78,7 +78,9 @@ object DataParser {
     val inputFile = Main.sc.textFile(inputFilepath)
 
     // Map the input file data to an RDD
-    val Data = inputFile.map(line => ParsingFunc(line, schemaString, schemaType))
+    val Data = inputFile.collect {
+      case line if !SantizeLine(line) => ParsingFunc(line, schemaString, schemaType)
+    }
     return Data
   }
 
@@ -88,14 +90,26 @@ object DataParser {
    * line: XML file line
    * schemaString: Space seperated attribute values
    */
+
+  private def SantizeLine(line: String) : Boolean = {
+    val invalidLines = Array("<?xml version=\"1.0\" encoding=\"utf-8\"?>", "<users>", "</users>")
+    return invalidLines contains line
+  }
+
   private def ParsingFunc(line: String, schemaString: String, schemaType: Array[DataType]) : Row = {
     // Parse line of XML using Scala's built in XML library
-    val xmlLine = scala.xml.XML.loadString(line)
-    var schemaPairs = schemaString.split(" ") zip schemaType
-    // Create array of values with element for each attribute in schemaString
-    var lineData = schemaPairs.map { case (fieldName: String, dType: DataType) => castToDType(getXMLAttribute(xmlLine, fieldName), dType) }
+    try {
+      val xmlLine = scala.xml.XML.loadString(line)
+      var schemaPairs = schemaString.split(" ") zip schemaType
+      // Create array of values with element for each attribute in schemaString
+      var lineData = schemaPairs.map { case (fieldName: String, dType: DataType) => castToDType(getXMLAttribute(xmlLine, fieldName), dType) }
 
-    return Row.fromSeq(lineData)
+      return Row.fromSeq(lineData)
+    } catch {
+      case e:Exception=>
+      println(line)
+      throw new Exception("failed to load")
+    }
   }
 
   /*
