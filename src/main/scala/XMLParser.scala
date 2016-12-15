@@ -127,7 +127,10 @@ object XMLParser {
       case DateType => 
         // If the string is a date, convert from date string to long.
         var format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
-        return format.parse(attribute).getTime() 
+        var longTime = format.parse(attribute).getTime()
+        // Then convert long to int representing days since epoch
+        var longDays : Long = longTime / (1000*60*60*24)
+        return longDays.toInt
     }
   }
 
