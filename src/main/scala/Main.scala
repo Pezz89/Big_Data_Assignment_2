@@ -22,7 +22,7 @@ object Main {
   def main(args: Array[String]) {
     // Retrieve data from StackOverflow dataset XMLs. Format into DataFrames
     // for easy access to data elements.
-    val df = DataParser.ParseData()
+    val df = XMLParser.ParseData()
 
     // get the users XML file
     val users = df("users")

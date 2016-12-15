@@ -10,7 +10,7 @@ object KMeans {
    */
    //Create a map to store each data row with its closest cluster index as key
 
-  def train(dataset : DataFrame) : RDD[(Int,ArrayBuffer[Float])] = {
+  def train(dataset : DataFrame) : RDD[(Int,Row)] = {
     val rows = dataset.rdd
     val K = 5 //number of intended clusters
     val n = rows.count() //number of datapoints
@@ -53,11 +53,14 @@ object KMeans {
     closestCentre
   }
 
-  def calculateNewCentres(clusterMap : RDD[(Int,Row)]): RDD[(Int,ArrayBuffer[Float])] = {
-    val data = clusterMap.map(x => (x._1, x._2.asInstanceOf[ArrayBuffer[Float]]))
-    val newCentres = data.reduceByKey((a, b) => averageRow(a, b))
+  def calculateNewCentres(clusterMap : RDD[(Int,Row)]): RDD[(Int,Row)] = {
+    //val data = clusterMap.map(x => (x._1, x._2.asInstanceOf[ArrayBuffer[Double]]))
+    val newCentres = clusterMap.reduceByKey((a, b) => averageRow(a, b))
+    //val singleCluster = clusterMap.filter(x => x._1 == 0)
+    //val singleClusterAsArray = singleCluster.reduce()
     newCentres
   }
+
 
 
 
@@ -73,12 +76,23 @@ object KMeans {
     return features
   }*/
 
-  def averageRow(a :ArrayBuffer[Float], b:ArrayBuffer[Float]) : ArrayBuffer[Float] = {
-    val newRow = new ArrayBuffer[Float]()
-    for (i <- 0 until a.length) {
+  /*def averageRow(a :ArrayBuffer[Float], b:ArrayBuffer[Float]) : ArrayBuffer[Float] = {
+    val newRow = Row.apply()
+    for (i <- a.indices) {
       val avgI = (a(i) + b(i)) /2
       newRow(i) = avgI
     }
     newRow
+  }*/
+
+  def averageRow(a:Row, b:Row) : Row = {
+    val means = new ArrayBuffer[Double]()
+    for (i <- 0 until a.size) {
+      val mean = (a.getInt(i) + b.getInt(i)) /2.0
+      means(i) = mean
+    }
+    val newRow = Row.fromSeq(means)
+    newRow
   }
+
 }

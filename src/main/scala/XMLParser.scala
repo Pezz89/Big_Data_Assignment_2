@@ -13,7 +13,7 @@ import org.apache.spark.sql.types._
  * Format and parse XML data to datasets, ready for further processing using
  * spark
  */
-object DataParser {
+object XMLParser {
 
   /*
    * Generate array of DataFrames from XML content
