@@ -22,6 +22,7 @@ object Main {
   def main(args: Array[String]) {
     // Retrieve data from StackOverflow dataset XMLs. Format into DataFrames
     // for easy access to data elements.
+
     val df = XMLParser.ParseData()
 
     // get the users XML file
@@ -30,5 +31,22 @@ object Main {
     val centresArray = centres.collect()
     val unwrap = centresArray.map(x => x._2)
     unwrap.foreach(println)
+
+    /*val dataFrames = DataParser.ParseData()
+
+    // get the users XML file
+    val users = dataFrames("users")
+    users.persist()
+    // Show 20 entries from the user dataset
+    users.show()
+    // Show types for the user dataset
+    users.printSchema()
+    users.show()
+
+    // create new dataframe with only the reputation of the users
+    users.select("CreationDate").show()
+*/
+    // Info on using DataFrames here: https://www.mapr.com/blog/using-apache-spark-dataframes-processing-tabular-data
   }
 }
+
