@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.apache.hadoop:hadoop-mapreduce-client-app:2.6.0-cdh5.7.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/hadoop/hadoop-mapreduce-client-app/2.6.0-cdh5.7.0-SNAPSHOT/hadoop-mapreduce-client-app-2.6.0-cdh5.7.0-20160213.004634-401.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/hadoop/hadoop-mapreduce-client-app/2.6.0-cdh5.7.0-SNAPSHOT/hadoop-mapreduce-client-app-2.6.0-cdh5.7.0-20160213.004634-401-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/hadoop/hadoop-mapreduce-client-app/2.6.0-cdh5.7.0-SNAPSHOT/hadoop-mapreduce-client-app-2.6.0-cdh5.7.0-20160213.004634-401-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

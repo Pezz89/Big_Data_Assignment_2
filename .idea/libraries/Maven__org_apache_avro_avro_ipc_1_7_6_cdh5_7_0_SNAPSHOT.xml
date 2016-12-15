@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.apache.avro:avro-ipc:1.7.6-cdh5.7.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/avro/avro-ipc/1.7.6-cdh5.7.0-SNAPSHOT/avro-ipc-1.7.6-cdh5.7.0-20160213.003126-305.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/avro/avro-ipc/1.7.6-cdh5.7.0-SNAPSHOT/avro-ipc-1.7.6-cdh5.7.0-20160213.003126-305-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/avro/avro-ipc/1.7.6-cdh5.7.0-SNAPSHOT/avro-ipc-1.7.6-cdh5.7.0-20160213.003126-305-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
