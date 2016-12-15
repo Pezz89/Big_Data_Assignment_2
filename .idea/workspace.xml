@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="74fa95ce-dfd4-40da-a7a1-b336badfaea8" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/KMeans.scala" afterPath="$PROJECT_DIR$/src/main/scala/KMeans.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/XMLParser.scala" afterPath="$PROJECT_DIR$/src/main/scala/XMLParser.scala" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
@@ -45,8 +43,8 @@
       <file leaf-file-name="XMLParser.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/XMLParser.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="33" column="8" lean-forward="true" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="8" />
+            <state relative-caret-position="441">
+              <caret line="135" column="0" lean-forward="true" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
               <folding>
                 <element signature="e#23#59#0" expanded="true" />
               </folding>
@@ -603,12 +601,12 @@
       <updated>1481830590764</updated>
       <workItem from="1481830593703" duration="700000" />
       <workItem from="1481831304788" duration="5133000" />
-      <workItem from="1481837779668" duration="1173000" />
+      <workItem from="1481837779668" duration="2057000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7006000" />
+    <option name="totallyTimeSpent" value="7890000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="77" y="122" width="1400" height="893" extended-state="0" />
@@ -807,10 +805,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar:///usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar!/java/util/Date.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="434" column="16" lean-forward="false" selection-start-line="434" selection-start-column="16" selection-end-line="434" selection-end-column="16" />
+          <folding>
+            <element signature="e#15761#15762#0" expanded="true" />
+            <element signature="e#15802#15803#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/XMLParser.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="33" column="8" lean-forward="true" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="8" />
+        <state relative-caret-position="441">
+          <caret line="135" column="0" lean-forward="true" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
           <folding>
             <element signature="e#23#59#0" expanded="true" />
           </folding>
