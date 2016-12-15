@@ -57,10 +57,11 @@ object DataParser {
    * Generate a schema based on the string of XML attributes
    */
   private def GenerateSchemaFromString(schemaString: String, schemaType: Array[DataType]) : StructType = {
-
+    // Replace all DateTypes with Longs as date will now be stored as longs.
     val sT = schemaType.map(i => if (i==DateType) LongType else i)
     val schemaPairs = schemaString.split(" ") zip sT
 
+    // Create schema for columns and set their datatypes for DataFrame based on attribute names.
     val fields = schemaPairs.map{case (fieldName: String, dataType: DataType) => StructField(fieldName, dataType, nullable = true)}
     val schema = StructType(fields)
     return schema
@@ -96,6 +97,10 @@ object DataParser {
 
     return Row.fromSeq(lineData)
   }
+
+  /*
+   * Cast attribute data to relevant datatype.
+   */
   private def castToDType(attribute: String, dType: DataType) : Any = {
     dType match {
       case StringType => return attribute
@@ -103,9 +108,12 @@ object DataParser {
         try {
           return attribute.toInt
         } catch {
+          // If the string was not castable to integer then it is not a number.
+          // In this case, return a placeholder value of -1.
           case e: Exception => return -1
         }
       case DateType => 
+        // If the string is a date, convert from date string to long.
         var format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
         return format.parse(attribute).getTime() 
     }
