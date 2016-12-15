@@ -34,7 +34,7 @@ object KMeans {
   def calculateNorm(datapoint : Row, centre : Row, m: Int): Double = {
     var norm : Double = 0.0
     for (a <- 0 to m) {
-      norm = norm + Math.pow(datapoint.getFloat(a) - centre.getFloat(a), 2.0)
+      norm = norm + Math.pow(datapoint.getInt(a).toFloat - centre.getInt(a).toFloat, 2.0)
     }
     norm = Math.pow(norm, 0.5)
     norm
