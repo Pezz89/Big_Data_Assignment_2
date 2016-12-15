@@ -26,7 +26,8 @@ object KMeans {
     for (a <- 0 until K) {
       centres(a) = rows(r.ne
     }*/
-    val centres = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
+    //val centres = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
+     val centres : Array[List[Float]] = Array(List(0.0f, 0.0f, 0.0f), List(10.0f, 10.0f, 10.0f), List(20.0f, 20.0f, 20.0f))
      val clusterMap :RDD[(Int,List[Float])]= rowsAsArray.map(row => (assignCluster(row,centres,m,K),row))
      val newCentres = calculateNewCentres(clusterMap)
      newCentres
