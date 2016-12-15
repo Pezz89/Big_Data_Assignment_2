@@ -23,17 +23,13 @@ object DataParser {
     // Define XML file locations and a string of attribute tags to retrieve
     // from each xml element.
     val xmlInfos = Array(
-      /*
-      ("badges", "../stackoverflow_dataset/badges.txt", "Id UserId Name Date"),
-      ("comments", "../stackoverflow_dataset/comments.txt", "Id PostId Score Text CreationDate UserId"),
-      ("posts", "../stackoverflow_dataset/posts.txt", "Id PostTypeId ParentID AcceptedAnswerId CreationDate Score ViewCount Body OwnerUserId LastEditorUserId LastEditorDisplayName LastEditDate LastActivityDate CommunityOwnedDate ClosedDate Title Tags AnswerCount CommentCount FavoriteCount"),
-      ("postHistory", "../stackoverflow_dataset/postHistory.txt","Id PostHistoryTypeId PostId RevisionGUID CreationDate UserId UserDisplayName Comment Text CloseReasonId"),
-      ("postLinks", "../stackoverflow_dataset/postLinks.txt", "Id CreationDate PostId RelatedPostId PostLinkTypeId"),
-      */
-      ("users", "../stackoverflow_dataset/users.txt", "Reputation CreationDate DisplayName EmailHash LastAccessDate WebsiteUrl Location Age AboutMe Views UpVotes DownVotes", Array[DataType](IntegerType, StringType, StringType, StringType, StringType, StringType, StringType, IntegerType, StringType, IntegerType, IntegerType, IntegerType))
-      /*
-      ("votes", "../stackoverflow_dataset/votes.txt", "Id PostId VoteTypeId UserId CreationDate")
-      */
+      ("badges", "../stackoverflow_dataset/badges.txt", "Id UserId Name Date", Array[DataType](IntegerType, IntegerType, StringType, DateType)),
+      ("comments", "../stackoverflow_dataset/comments.txt", "Id PostId Score Text CreationDate UserId", Array[DataType](IntegerType, IntegerType, IntegerType, StringType, DateType, IntegerType)),
+      ("posts", "../stackoverflow_dataset/posts.txt", "Id PostTypeId ParentID AcceptedAnswerId CreationDate Score ViewCount Body OwnerUserId LastEditorUserId LastEditorDisplayName LastEditDate LastActivityDate CommunityOwnedDate ClosedDate Title Tags AnswerCount CommentCount FavoriteCount", Array[DataType](IntegerType, IntegerType, IntegerType, IntegerType, DateType, IntegerType, IntegerType, StringType, IntegerType, IntegerType, StringType, DateType, DateType, DateType, DateType, StringType, StringType, IntegerType, IntegerType, IntegerType)),
+      ("postHistory", "../stackoverflow_dataset/postHistory.txt","Id PostHistoryTypeId PostId RevisionGUID CreationDate UserId UserDisplayName Comment Text CloseReasonId", Array[DataType](IntegerType, IntegerType, IntegerType,IntegerType, DateType, IntegerType, StringType, StringType, StringType, IntegerType)),
+      ("postLinks", "../stackoverflow_dataset/postLinks.txt", "Id CreationDate PostId RelatedPostId PostLinkTypeId", Array[DataType](IntegerType, DateType, IntegerType, IntegerType, IntegerType)),
+      ("users", "../stackoverflow_dataset/users.txt", "Reputation CreationDate DisplayName EmailHash LastAccessDate WebsiteUrl Location Age AboutMe Views UpVotes DownVotes", Array[DataType](IntegerType, DateType, StringType, StringType, DateType, StringType, StringType, IntegerType, StringType, IntegerType, IntegerType, IntegerType)),
+      ("votes", "../stackoverflow_dataset/votes.txt", "Id PostId VoteTypeId UserId CreationDate", Array[DataType](IntegerType, IntegerType, IntegerType, IntegerType, DateType))
     )
     
     // Store each file's DataFrame in an array of DataFrames.
@@ -45,7 +41,7 @@ object DataParser {
   private def ParseXMLInfo(xmlInfo: (String, String, Array[DataType])) : DataFrame = {
     // Get the XML attributes used for generating the table columns
     var schemaString = xmlInfo._2
-    var schemaType = xmlInfo._3
+    val schemaType = xmlInfo._3
     // Generate schema using XML attribute string
     var schema = GenerateSchemaFromString(schemaString, schemaType)
     // Generate RDD of data from the XML file
@@ -61,7 +57,10 @@ object DataParser {
    * Generate a schema based on the string of XML attributes
    */
   private def GenerateSchemaFromString(schemaString: String, schemaType: Array[DataType]) : StructType = {
-    var schemaPairs = schemaString.split(" ") zip schemaType
+
+    val sT = schemaType.map(i => if (i==DateType) LongType else i)
+    val schemaPairs = schemaString.split(" ") zip sT
+
     val fields = schemaPairs.map{case (fieldName: String, dataType: DataType) => StructField(fieldName, dataType, nullable = true)}
     val schema = StructType(fields)
     return schema
@@ -100,12 +99,15 @@ object DataParser {
   private def castToDType(attribute: String, dType: DataType) : Any = {
     dType match {
       case StringType => return attribute
-      case IntegerType =>   try {
-                                  return attribute.toInt
-                                } catch {
-                                  case e: Exception => return -1
-                                }
-      case DateType => return attribute
+      case IntegerType =>   
+        try {
+          return attribute.toInt
+        } catch {
+          case e: Exception => return -1
+        }
+      case DateType => 
+        var format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+        return format.parse(attribute).getTime() 
     }
   }
 

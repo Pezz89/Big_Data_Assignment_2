@@ -26,13 +26,19 @@ object Main {
 
     // get the users XML file
     val users = df("users")
+    users.persist()
     // Show 20 entries from the user dataset
-    //users.show()
+    users.show()
     // Show types for the user dataset
     users.printSchema()
+    users.show()
 
     // create new dataframe with only the reputation of the users
-    users.select("Reputation").distinct.show()
+    users.select("CreationDate").distinct.show()
+
+    // Info on using DataFrames here: https://www.mapr.com/blog/using-apache-spark-dataframes-processing-tabular-data
+
+
   }
 }
 
