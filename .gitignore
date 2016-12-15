@@ -2,7 +2,7 @@
 bin/
 target/
 .idea/
-stackoverflow_data/
+stackoverflow_dataset/
 # Compiled Object files
 *.slo
 *.lo
