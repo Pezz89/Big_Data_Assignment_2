@@ -29,7 +29,7 @@ object KMeans {
     for (a <- 0 until K) {
       centres(a) = rows(r.nextInt(n))
     }
-    assignClusters(rows,centres, m)
+    val clusterMap = rows.map(x => assignCluster(x, centres, m))
   }
 
   def calculateNorm(datapoint : Row, centre : Row, m: Int): Double = {
@@ -40,18 +40,16 @@ object KMeans {
     norm = Math.pow(norm, 0.5)
   }
 
-  def assignClusters(rows : Array[Row], centres: ArrayBuffer[Row], m : Int): Unit = {
-    for (row <- rows) {
-      var greatestNorm = 0.0
-      var closestCentre = 0
-      for (centreIndex <- 0 until centres.length) {
-        val norm = calculateNorm(row, centres(centreIndex), m)
-        if (norm > greatestNorm) {
-          greatestNorm = norm
-          closestCentre = centreIndex
-        }
+  def assignCluster(row : Row, centres: ArrayBuffer[Row], m : Int): (Int,Row) = {
+    var smallestNorm = 99999999999.0
+    var closestCentre = 0
+    for (centreIndex <- centres.indices) {
+      val norm = calculateNorm(row, centres(centreIndex), m)
+      if (norm < smallestNorm) {
+        smallestNorm = norm
+        closestCentre = centreIndex
       }
-      clusterMap.put(closestCentre, row)
     }
+    (closestCentre,row)
   }
 }
