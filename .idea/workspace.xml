@@ -21,8 +21,8 @@
       <file leaf-file-name="KMeans.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/KMeans.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="23" column="17" lean-forward="true" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="17" />
+            <state relative-caret-position="135">
+              <caret line="36" column="86" lean-forward="true" selection-start-line="36" selection-start-column="86" selection-end-line="36" selection-end-column="86" />
               <folding>
                 <element signature="e#23#54#0" expanded="true" />
               </folding>
@@ -604,12 +604,12 @@
       <updated>1481830590764</updated>
       <workItem from="1481830593703" duration="700000" />
       <workItem from="1481831304788" duration="5133000" />
-      <workItem from="1481837779668" duration="4028000" />
+      <workItem from="1481837779668" duration="4463000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9861000" />
+    <option name="totallyTimeSpent" value="10296000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="77" y="122" width="1400" height="893" extended-state="0" />
@@ -827,8 +827,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/KMeans.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="23" column="17" lean-forward="true" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="17" />
+        <state relative-caret-position="135">
+          <caret line="36" column="86" lean-forward="true" selection-start-line="36" selection-start-column="86" selection-end-line="36" selection-end-column="86" />
           <folding>
             <element signature="e#23#54#0" expanded="true" />
           </folding>
