@@ -26,6 +26,13 @@ object Main {
 
     // get the users XML file
     val users = df("users")
-    users.show()
+    // Show 20 entries from the user dataset
+    //users.show()
+    // Show types for the user dataset
+    users.printSchema()
+
+    // create new dataframe with only the reputation of the users
+    users.select("Reputation").distinct.show()
   }
 }
+
