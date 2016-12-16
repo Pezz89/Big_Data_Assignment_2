@@ -36,7 +36,7 @@ object Main {
   }
 }
 
-    /*val users = dataFrames("users")
+    //val users = dataFrames("users")
 
     /*val dataFrames = DataParser.ParseData()
 
@@ -54,8 +54,3 @@ object Main {
 */
     // Info on using DataFrames here: https://www.mapr.com/blog/using-apache-spark-dataframes-processing-tabular-data
 
-
-
-  }
-}
-*/
