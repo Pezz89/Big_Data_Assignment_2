@@ -44,7 +44,7 @@ object Main {
 
     // create new dataframe with only the reputation of the users
     //val a = users.select("Reputation").rdd.map(r => r(0)).persist()
-    a.count()
+    a.take(2).foreach(f => println(f(1)))
     
     
 
