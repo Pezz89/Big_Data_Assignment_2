@@ -12,8 +12,9 @@ object KMeans {
    //Create a map to store each data row with its closest cluster index as key
 
   def train(dataset : DataFrame) : RDD[(Int,List[Float])] = {
-    val rows = dataset.rdd
-    val rowsAsArray = dataset.map(row => List(row.getInt(0).toFloat, row.getInt(1).toFloat, row.getInt(2).toFloat) )
+     val relevantData = dataset.select("Reputation", "CreationDate", "LastAccessDate")
+    val rows = relevantData.rdd
+    val rowsAsArray = rows.map(row => List(row.getInt(0).toFloat, row.getInt(1).toFloat, row.getInt(2).toFloat) )
     val K = 5 //number of intended clusters
     //val n = rows.count() //number of datapoints
     val m = 3 //number of features

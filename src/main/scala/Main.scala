@@ -26,11 +26,14 @@ object Main {
     val df = XMLParser.ParseData()
 
     // get the users XML file
+
     val users = df("users")
     val centres = KMeans.train(users)
     val centresArray = centres.collect()
     val unwrap = centresArray.map(x => x._2)
     unwrap.foreach(println)
+
+    /*val users = dataFrames("users")
 
     /*val dataFrames = DataParser.ParseData()
 
@@ -47,6 +50,9 @@ object Main {
     users.select("CreationDate").show()
 */
     // Info on using DataFrames here: https://www.mapr.com/blog/using-apache-spark-dataframes-processing-tabular-data
+
+
+
   }
 }
 
