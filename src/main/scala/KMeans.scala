@@ -12,12 +12,13 @@ object KMeans {
    //Create a map to store each data row with its closest cluster index as key
 
   def train(dataset : DataFrame) : RDD[(Int,List[Float])] = {
-     val relevantData = dataset.select("Reputation", "CreationDate", "LastAccessDate")
+     val relevantData = dataset.select("Reputation")
     val rows = relevantData.rdd
-    val rowsAsArray = rows.map(row => List(row.getInt(0).toFloat, row.getInt(1).toFloat, row.getInt(2).toFloat) )
+    //val rowsAsArray = rows.map(row => List(row.getInt(0).toFloat, row.getInt(1).toFloat, row.getInt(2).toFloat) )
+    val rowsAsArray = rows.map(row => List(row.getInt(0).toFloat) )
     val K = 5 //number of intended clusters
     //val n = rows.count() //number of datapoints
-    val m = 3 //number of features
+    val m = 1 //number of features
     //var centres = new ArrayBuffer[Row]
 
     //get random number generator r and use to select K centres randomly from dataset
@@ -28,7 +29,8 @@ object KMeans {
       centres(a) = rows(r.ne
     }*/
     //val centres = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
-     val centres : Array[List[Float]] = Array(List(0.0f, 0.0f, 0.0f), List(10.0f, 10.0f, 10.0f), List(20.0f, 20.0f, 20.0f))
+     //val centres : Array[List[Float]] = Array(List(0.0f, 0.0f, 0.0f), List(10.0f, 10.0f, 10.0f), List(20.0f, 20.0f, 20.0f))
+     val centres : Array[List[Float]] = Array(List(0.0f), List(0.0f), List(0.0f), List(0.0f), List(0.0f))
      val clusterMap :RDD[(Int,List[Float])]= rowsAsArray.map(row => (assignCluster(row,centres,m,K),row))
      val newCentres = calculateNewCentres(clusterMap)
      newCentres
@@ -45,7 +47,7 @@ object KMeans {
   }
 
   def assignCluster(row : List[Float], centres: Array[List[Float]], m : Int, K :Int): Int = {
-    var smallestNorm = 99999999999.0
+    var smallestNorm = 999999.0
     var closestCentre = 0
     for (centreNumber <- 0 until K) {
       val norm = calculateNorm(row, centres(centreNumber), m)

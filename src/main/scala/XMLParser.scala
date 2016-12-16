@@ -124,13 +124,13 @@ object XMLParser {
           // In this case, return a placeholder value of -1.
           case e: Exception => return -1
         }
-      case DateType => 
-        // If the string is a date, convert from date string to long.
+      case DateType => return attribute
+        /*// If the string is a date, convert from date string to long.
         var format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
         var longTime = format.parse(attribute).getTime()
         // Then convert long to int representing days since epoch
         var longDays : Long = longTime / (1000*60*60*24)
-        return longDays.toInt
+        return longDays.toInt*/
     }
   }
 
