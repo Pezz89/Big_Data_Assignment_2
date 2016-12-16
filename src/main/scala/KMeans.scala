@@ -23,25 +23,33 @@ object KMeans {
     val m = 1 //number of features
     //var centres = new ArrayBuffer[Row]
 
-    val randomCentres : Array[Float] = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
-     var centres : ArrayBuffer[Float] = new ArrayBuffer[Float]()
+    var centres : Array[Float] = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
+     /*var centres : ArrayBuffer[Float] = new ArrayBuffer[Float](K)
      for (i <- 0 until K) {
        centres(i) = randomCentres(i)
-     }
+     }*/
+     var i = 0
 
-    for (i <- 0 until iterations) {
-      val clusterMap :RDD[(Int,Float)]= rowsAsArray.map(row => (assignCluster(row,centres,m,K),row))
-      val newCentres = clusterMap.reduceByKey((a,b) => getAverage(a,b))
-
-      val results = newCentres.map(x => x._2)
-      val resultsOutput = results.collect()
-      for (i <- 0 until K) {
-        centres(i) = resultsOutput(i)
-      }
-     println("Average reputation is:")
-     centres.foreach(println)
+    while (i < iterations) {
+      clustering(centres)
      
     }
+
+     def clustering(cent :Array[Float]) : Unit = {
+       val clusterMap :RDD[(Int,Float)]= rowsAsArray.map(row => (assignCluster(row,centres,m,K),row))
+       val newCentres = clusterMap.reduceByKey((a,b) => getAverage(a,b))
+
+       val results = newCentres.map(x => x._2)
+       val resultsOutput = results.collect()
+       centres = resultsOutput
+       /*for (i <- 0 until K) {
+         centres(i) = resultsOutput(i)
+       }*/
+       println("Average reputation is:")
+       centres.foreach(println)
+
+
+     }
 
     //get random number generator r and use to select K centres randomly from dataset
     /*val r = scala.util.Random
@@ -72,7 +80,7 @@ object KMeans {
     norm
   }*/
 
-  def assignCluster(row : Float, centres: ArrayBuffer[Float], m : Int, K :Int): Int = {
+  def assignCluster(row : Float, centres: Array[Float], m : Int, K :Int): Int = {
     var smallestNorm = 999999.0
     var closestCentre = 0
     for (centreNumber <- 0 until K) {
