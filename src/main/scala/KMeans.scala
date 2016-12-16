@@ -23,12 +23,16 @@ object KMeans {
     val m = 1 //number of features
     //var centres = new ArrayBuffer[Row]
 
-    var centres : ArrayBuffer[Float] = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
+    val randomCentres : Array[Float] = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
+     var centres : ArrayBuffer[Float] = new ArrayBuffer[Float]()
+     for (i <- 0 until K) {
+       centres(i) = randomCentres(i)
+     }
 
     for (i <- 0 until iterations) {
       val clusterMap :RDD[(Int,Float)]= rowsAsArray.map(row => (assignCluster(row,centres,m,K),row))
       val newCentres = clusterMap.reduceByKey((a,b) => getAverage(a,b))
-      
+
       val results = newCentres.map(x => x._2)
       val resultsOutput = results.collect()
       for (i <- 0 until K) {
