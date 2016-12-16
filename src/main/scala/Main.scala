@@ -15,7 +15,8 @@ object Main {
   // Initialize spark and SQL to allow for processing of structured data in a
   // spark cluster
   val sc = new SparkContext(new SparkConf().setAppName("Spark KMeans Clustering"))
-  val sqlContext= new org.apache.spark.sql.SQLContext(sc)
+  val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+
   import sqlContext.implicits._
 
   // Main function for task execution
@@ -32,6 +33,8 @@ object Main {
     val centresArray = centres.collect()
     val unwrap = centresArray.map(x => x._2)
     unwrap.foreach(println)
+  }
+}
 
     /*val users = dataFrames("users")
 
@@ -55,4 +58,4 @@ object Main {
 
   }
 }
-
+*/
