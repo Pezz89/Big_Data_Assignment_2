@@ -28,9 +28,8 @@ object KMeans {
      for (i <- 0 until K) {
        centres(i) = randomCentres(i)
      }*/
-     var i = 0
 
-    while (i < iterations) {
+    for (i <- 0 until iterations) {
       clustering(centres)
      
     }
