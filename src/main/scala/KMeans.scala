@@ -17,6 +17,8 @@ object KMeans {
     val rows = relevantData.rdd
     //val rowsAsArray = rows.map(row => List(row.getInt(0).toFloat, row.getInt(1).toFloat, row.getInt(2).toFloat) )
     val rowsAsArray = rows.map(row => row.getInt(0).toFloat )
+     val maximum = rowsAsArray.reduce((a,b) => math.max(a,b))
+     println(maximum)
     //rowsAsArray.foreach(println)
     val K = 4 //number of intended clusters
     //val n = rows.count() //number of datapoints
