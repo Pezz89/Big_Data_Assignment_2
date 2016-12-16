@@ -13,7 +13,7 @@ import org.apache.spark.sql.types._
  * Format and parse XML data to datasets, ready for further processing using
  * spark
  */
-object DataParser {
+object XMLParser {
 
   /*
    * Generate array of DataFrames from XML content
@@ -23,14 +23,18 @@ object DataParser {
     // Define XML file locations and a string of attribute tags to retrieve
     // from each xml element.
     val xmlInfos = Array(
-      ("badges", "../stackoverflow_dataset/badges.txt", "Id UserId Name Date", Array[DataType](IntegerType, IntegerType, StringType, DateType)),
-      ("comments", "../stackoverflow_dataset/comments.txt", "Id PostId Score Text CreationDate UserId", Array[DataType](IntegerType, IntegerType, IntegerType, StringType, DateType, IntegerType)),
-      ("posts", "../stackoverflow_dataset/posts.txt", "Id PostTypeId ParentID AcceptedAnswerId CreationDate Score ViewCount Body OwnerUserId LastEditorUserId LastEditorDisplayName LastEditDate LastActivityDate CommunityOwnedDate ClosedDate Title Tags AnswerCount CommentCount FavoriteCount", Array[DataType](IntegerType, IntegerType, IntegerType, IntegerType, DateType, IntegerType, IntegerType, StringType, IntegerType, IntegerType, StringType, DateType, DateType, DateType, DateType, StringType, StringType, IntegerType, IntegerType, IntegerType)),
-      ("postHistory", "../stackoverflow_dataset/postHistory.txt","Id PostHistoryTypeId PostId RevisionGUID CreationDate UserId UserDisplayName Comment Text CloseReasonId", Array[DataType](IntegerType, IntegerType, IntegerType,IntegerType, DateType, IntegerType, StringType, StringType, StringType, IntegerType)),
-      ("postLinks", "../stackoverflow_dataset/postLinks.txt", "Id CreationDate PostId RelatedPostId PostLinkTypeId", Array[DataType](IntegerType, DateType, IntegerType, IntegerType, IntegerType)),
-      ("users", "../stackoverflow_dataset/users.txt", "Reputation CreationDate DisplayName EmailHash LastAccessDate WebsiteUrl Location Age AboutMe Views UpVotes DownVotes", Array[DataType](IntegerType, DateType, StringType, StringType, DateType, StringType, StringType, IntegerType, StringType, IntegerType, IntegerType, IntegerType)),
-      ("votes", "../stackoverflow_dataset/votes.txt", "Id PostId VoteTypeId UserId CreationDate", Array[DataType](IntegerType, IntegerType, IntegerType, IntegerType, DateType))
-    )
+      /*
+      ("badges", "/data/stackoverflow/Badges", "Id UserId Name Date", Array[DataType](IntegerType, IntegerType, StringType, DateType)),
+      ("comments", "/data/stackoverflow/Comments", "Id PostId Score Text CreationDate UserId", Array[DataType](IntegerType, IntegerType, IntegerType, StringType, DateType, IntegerType)),
+      ("posts", "data/stackoverflow/Posts", "Id PostTypeId ParentID AcceptedAnswerId CreationDate Score ViewCount Body OwnerUserId LastEditorUserId LastEditorDisplayName LastEditDate LastActivityDate CommunityOwnedDate ClosedDate Title Tags AnswerCount CommentCount FavoriteCount", Array[DataType](IntegerType, IntegerType, IntegerType, IntegerType, DateType, IntegerType, IntegerType, StringType, IntegerType, IntegerType, StringType, DateType, DateType, DateType, DateType, StringType, StringType, IntegerType, IntegerType, IntegerType)),
+      ("postHistory", "/data/stackoverflow/PostHistory","Id PostHistoryTypeId PostId RevisionGUID CreationDate UserId UserDisplayName Comment Text CloseReasonId", Array[DataType](IntegerType, IntegerType, IntegerType,IntegerType, DateType, IntegerType, StringType, StringType, StringType, IntegerType)),
+      ("postLinks", "data/stackoverflow/PostLinks", "Id CreationDate PostId RelatedPostId PostLinkTypeId", Array[DataType](IntegerType, DateType, IntegerType, IntegerType, IntegerType)),
+      */
+      ("users", "stackoverflow_dataset/users.txt", "Reputation CreationDate DisplayName EmailHash LastAccessDate WebsiteUrl Location Age AboutMe Views UpVotes DownVotes", Array[DataType](IntegerType, DateType, StringType, StringType, DateType, StringType, StringType, IntegerType, StringType, IntegerType, IntegerType, IntegerType))
+      /*
+      ("votes", "/data/stackoverflow/Votes", "Id PostId VoteTypeId UserId CreationDate", Array[DataType](IntegerType, IntegerType, IntegerType, IntegerType, DateType))
+      */
+     )
     
     // Store each file's DataFrame in an array of DataFrames.
     val parsedData = xmlInfos.map(x => (x._1, ParseXMLInfo((x._2, x._3, x._4)))).toMap
@@ -98,18 +102,12 @@ object DataParser {
 
   private def ParsingFunc(line: String, schemaString: String, schemaType: Array[DataType]) : Row = {
     // Parse line of XML using Scala's built in XML library
-    try {
-      val xmlLine = scala.xml.XML.loadString(line)
-      var schemaPairs = schemaString.split(" ") zip schemaType
-      // Create array of values with element for each attribute in schemaString
-      var lineData = schemaPairs.map { case (fieldName: String, dType: DataType) => castToDType(getXMLAttribute(xmlLine, fieldName), dType) }
+    val xmlLine = scala.xml.XML.loadString(line)
+    var schemaPairs = schemaString.split(" ") zip schemaType
+    // Create array of values with element for each attribute in schemaString
+    var lineData = schemaPairs.map { case (fieldName: String, dType: DataType) => castToDType(getXMLAttribute(xmlLine, fieldName), dType) }
 
-      return Row.fromSeq(lineData)
-    } catch {
-      case e:Exception=>
-      println(line)
-      throw new Exception("failed to load")
-    }
+    return Row.fromSeq(lineData)
   }
 
   /*
@@ -129,7 +127,10 @@ object DataParser {
       case DateType => 
         // If the string is a date, convert from date string to long.
         var format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
-        return format.parse(attribute).getTime() 
+        var longTime = format.parse(attribute).getTime()
+        // Then convert long to int representing days since epoch
+        var longDays : Long = longTime / (1000*60*60*24)
+        return longDays.toInt
     }
   }
 

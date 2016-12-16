@@ -2,6 +2,7 @@ package ClusterSOData
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql._
+
 import scala.collection.mutable.ArrayBuffer
 
 object KMeans {
@@ -10,10 +11,11 @@ object KMeans {
    */
    //Create a map to store each data row with its closest cluster index as key
 
-  def train(dataset : DataFrame) : RDD[(Int,ArrayBuffer[Float])] = {
+  def train(dataset : DataFrame) : RDD[(Int,List[Float])] = {
     val rows = dataset.rdd
+    val rowsAsArray = dataset.map(row => List(row.getInt(0).toFloat, row.getInt(1).toFloat, row.getInt(2).toFloat) )
     val K = 5 //number of intended clusters
-    val n = rows.count() //number of datapoints
+    //val n = rows.count() //number of datapoints
     val m = 3 //number of features
     //var centres = new ArrayBuffer[Row]
 
@@ -24,23 +26,24 @@ object KMeans {
     for (a <- 0 until K) {
       centres(a) = rows(r.ne
     }*/
-    val centres = rows.takeSample(false, K, System.nanoTime().toInt)
-     val clusterMap :RDD[(Int,Row)]= rows.map(row => (assignCluster(row,centres,m,K),row))
+    //val centres = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
+     val centres : Array[List[Float]] = Array(List(0.0f, 0.0f, 0.0f), List(10.0f, 10.0f, 10.0f), List(20.0f, 20.0f, 20.0f))
+     val clusterMap :RDD[(Int,List[Float])]= rowsAsArray.map(row => (assignCluster(row,centres,m,K),row))
      val newCentres = calculateNewCentres(clusterMap)
      newCentres
 
   }
 
-  def calculateNorm(datapoint : Row, centre : Row, m: Int): Double = {
+  def calculateNorm(datapoint : List[Float], centre : List[Float], m: Int): Double = {
     var norm : Double = 0.0
-    for (a <- 0 to m) {
-      norm = norm + Math.pow(datapoint.getFloat(a) - centre.getFloat(a), 2.0)
+    for (a <- 0 until m) {
+      norm = norm + Math.pow(datapoint(a) - centre(a), 2.0)
     }
     norm = Math.pow(norm, 0.5)
     norm
   }
 
-  def assignCluster(row : Row, centres: Array[Row], m : Int, K :Int): Int = {
+  def assignCluster(row : List[Float], centres: Array[List[Float]], m : Int, K :Int): Int = {
     var smallestNorm = 99999999999.0
     var closestCentre = 0
     for (centreNumber <- 0 until K) {
@@ -53,11 +56,14 @@ object KMeans {
     closestCentre
   }
 
-  def calculateNewCentres(clusterMap : RDD[(Int,Row)]): RDD[(Int,ArrayBuffer[Float])] = {
-    val data = clusterMap.map(x => (x._1, x._2.asInstanceOf[ArrayBuffer[Float]]))
-    val newCentres = data.reduceByKey((a, b) => averageRow(a, b))
+  def calculateNewCentres(clusterMap : RDD[(Int,List[Float])]): RDD[(Int,List[Float])] = {
+    //val data = clusterMap.map(x => (x._1, x._2.asInstanceOf[ArrayBuffer[Double]]))
+    val newCentres = clusterMap.reduceByKey((a, b) => averageRow(a, b))
+    //val singleCluster = clusterMap.filter(x => x._1 == 0)
+    //val singleClusterAsArray = singleCluster.reduce()
     newCentres
   }
+
 
 
 
@@ -73,12 +79,22 @@ object KMeans {
     return features
   }*/
 
-  def averageRow(a :ArrayBuffer[Float], b:ArrayBuffer[Float]) : ArrayBuffer[Float] = {
-    val newRow = new ArrayBuffer[Float]()
-    for (i <- 0 until a.length) {
+  /*def averageRow(a :ArrayBuffer[Float], b:ArrayBuffer[Float]) : ArrayBuffer[Float] = {
+    val newRow = Row.apply()
+    for (i <- a.indices) {
       val avgI = (a(i) + b(i)) /2
       newRow(i) = avgI
     }
     newRow
+  }*/
+
+  def averageRow(a:List[Float], b:List[Float]) : List[Float] = {
+    val means = new ArrayBuffer[Float]
+    for (i <- 0 until a.size) {
+      val mean = (a(i) + b(i)) /2.0f
+      means(i) = mean
+    }
+    return means.toList
   }
+
 }
