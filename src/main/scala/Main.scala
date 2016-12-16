@@ -30,9 +30,9 @@ object Main {
 
     val users = df("users")
     val centres = KMeans.train(users)
-    val centresArray = centres.collect()
-    val unwrap = centresArray.map(x => x._2)
-    unwrap.foreach(println)
+    //val centresArray = centres.collect()
+    //val unwrap = centresArray.map(x => x._2)
+    //unwrap.foreach(println)
   }
 }
 

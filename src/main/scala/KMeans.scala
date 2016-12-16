@@ -11,12 +11,12 @@ object KMeans {
    */
    //Create a map to store each data row with its closest cluster index as key
 
-  def train(dataset : DataFrame) : RDD[(Int,List[Float])] = {
+  def train(dataset : DataFrame) : Unit = {
      val relevantData = dataset.select("Reputation")
     val rows = relevantData.rdd
     //val rowsAsArray = rows.map(row => List(row.getInt(0).toFloat, row.getInt(1).toFloat, row.getInt(2).toFloat) )
-    val rowsAsArray = rows.map(row => List(row.getInt(0).toFloat) )
-    val K = 5 //number of intended clusters
+    val rowsAsArray = rows.map(row => row.getInt(0).toFloat )
+    val K = 1 //number of intended clusters
     //val n = rows.count() //number of datapoints
     val m = 1 //number of features
     //var centres = new ArrayBuffer[Row]
@@ -30,13 +30,15 @@ object KMeans {
     }*/
     //val centres = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
      //val centres : Array[List[Float]] = Array(List(0.0f, 0.0f, 0.0f), List(10.0f, 10.0f, 10.0f), List(20.0f, 20.0f, 20.0f))
-     val centres : Array[List[Float]] = Array(List(0.0f), List(0.0f), List(0.0f), List(0.0f), List(0.0f))
-     val clusterMap :RDD[(Int,List[Float])]= rowsAsArray.map(row => (assignCluster(row,centres,m,K),row))
-     val newCentres = calculateNewCentres(clusterMap)
-     newCentres
+     //val centres : Array[List[Float]] = Array(List(0.0f), List(0.0f), List(0.0f), List(0.0f), List(0.0f))
+     val centre = 0.0f
+     //val clusterMap :RDD[(Int,List[Float])]= rowsAsArray.map(row => (assignCluster(row,centres,m,K),row))
+     //val newCentres = calculateNewCentres(clusterMap)
+     val newCentre = rowsAsArray.reduce((a,b) => getAverage(a,b))
+     println(newCentre)
 
   }
-
+/*
   def calculateNorm(datapoint : List[Float], centre : List[Float], m: Int): Double = {
     var norm : Double = 0.0
     for (a <- 0 until m) {
@@ -65,7 +67,7 @@ object KMeans {
     //val singleCluster = clusterMap.filter(x => x._1 == 0)
     //val singleClusterAsArray = singleCluster.reduce()
     newCentres
-  }
+  }*/
 
 
 
@@ -98,6 +100,10 @@ object KMeans {
       means(i) = mean
     }
     return means.toList
+  }
+
+  def getAverage(a: Float, b:Float) : Float = {
+    return ((a+b)/2)
   }
 
 }
