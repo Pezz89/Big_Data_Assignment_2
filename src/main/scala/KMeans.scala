@@ -17,8 +17,8 @@ object KMeans {
     val rows = relevantData.rdd
     //val rowsAsArray = rows.map(row => List(row.getInt(0).toFloat, row.getInt(1).toFloat, row.getInt(2).toFloat) )
     val rowsAsArray = rows.map(row => row.getInt(0).toFloat)
-    val maximum = rowsAsArray.reduce((a, b) => math.max(a, b))
-    println(maximum)
+    //val maximum = rowsAsArray.reduce((a, b) => math.max(a, b))
+    //println(maximum)
     //rowsAsArray.foreach(println)
     val K = 4
     //number of intended clusters
@@ -26,19 +26,24 @@ object KMeans {
     val m = 1 //number of features
     //var centres = new ArrayBuffer[Float]()
 
-    //var centres: Array[Float] = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
+    var centres: Array[Float] = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
+    //To reduce chance of two random centres being the same, add i to each
+    for (i <- 0 until K) {
+      centres(i) += i
+    }
+
     /*var centres : ArrayBuffer[Float] = new ArrayBuffer[Float](K)
     for (i <- 0 until K) {
       centres(i) = randomCentres(i)
     }*/
 
 
-    var centres = new Array[Float](K)
+    /*var centres = new Array[Float](K)
 
     val someNumber = maximum / K
     for (i <- 0 until K) {
       centres(i) = someNumber * i
-    }
+    }*/
 
     for (i <- 0 until iterations) {
       centres = clustering(centres, rowsAsArray, m, K)
