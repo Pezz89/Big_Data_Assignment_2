@@ -13,24 +13,28 @@ object KMeans {
 
 
   def train(dataset : DataFrame, iterations:Int) : Unit = {
-    val relevantData = dataset.select("Reputation")
+    val K = 4
+    val m = 2
+    val relevantData = dataset.select("Reputation", "Views")
     val rows = relevantData.rdd
     //val rowsAsArray = rows.map(row => List(row.getInt(0).toFloat, row.getInt(1).toFloat, row.getInt(2).toFloat) )
-    val rowsAsArray = rows.map(row => row.getInt(0).toFloat)
+    val rowsAsArray = rows.map(row => convertRow(row, m))
     //val maximum = rowsAsArray.reduce((a, b) => math.max(a, b))
     //println(maximum)
     //rowsAsArray.foreach(println)
-    val K = 4
+
     //number of intended clusters
     //val n = rows.count() //number of datapoints
-    val m = 1 //number of features
+     //number of features
     //var centres = new ArrayBuffer[Float]()
 
-    var centres: Array[Float] = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
-    //To reduce chance of two random centres being the same, add i to each
+    var centres: Array[Array[Float]] = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
+    //To reduce chance of two random centres being the same, add a changing value to each
     println("centres initialised")
     for (i <- 0 until K) {
-      centres(i) += i
+      for (j <- 0 until m) {
+        centres(i)(j) += i+j
+      }
       println("centre " + i + " = " + centres(i) )
     }
 
@@ -56,9 +60,9 @@ object KMeans {
   }
 
 
-  def clustering(centres :Array[Float], rowsAsArray : RDD[Float], m : Int, K : Int) : Array[Float] = {
-    val clusterMap :RDD[(Int,Float)]= rowsAsArray.map(row => (assignCluster(row,centres,m,K),row))
-    val newCentres = clusterMap.reduceByKey((a,b) => getAverage(a,b))
+  def clustering(centres :Array[Array[Float]], rowsAsArray : RDD[Array[Float]], m : Int, K : Int) : Array[Array[Float]] = {
+    val clusterMap :RDD[(Int,Array[Float])]= rowsAsArray.map(row => (assignCluster(row,centres,m,K),row))
+    val newCentres = clusterMap.reduceByKey((a,b) => getMeanVector(a,b,m))
 
     val results = newCentres.map(x => x._2)
     results.collect()
@@ -84,22 +88,22 @@ object KMeans {
 
 
 
-  /*
-    def calculateNorm(datapoint : List[Float], centre : List[Float], m: Int): Double = {
+
+    def calculateNorm(datapoint : Array[Float], centre : Array[Float], m: Int): Double = {
       var norm : Double = 0.0
       for (a <- 0 until m) {
         norm = norm + Math.pow(datapoint(a) - centre(a), 2.0)
       }
       norm = Math.pow(norm, 0.5)
       norm
-    }*/
+    }
 
-  def assignCluster(row : Float, centres: Array[Float], m : Int, K :Int): Int = {
+  def assignCluster(row : Array[Float], centres: Array[Array[Float]], m : Int, K :Int): Int = {
     var smallestNorm = 999999.0
     var closestCentre = 0
     for (centreNumber <- 0 until K) {
-      val norm = Math.abs(row - centres(centreNumber))
-      //val norm = calculateNorm(row, centres(centreNumber), m)
+      //val norm = Math.abs(row - centres(centreNumber))
+      val norm = calculateNorm(row, centres(centreNumber), m)
       if (norm < smallestNorm) {
         smallestNorm = norm
         closestCentre = centreNumber
@@ -142,6 +146,7 @@ object KMeans {
     newRow
   }*/
 
+
   def averageRow(a:List[Float], b:List[Float]) : List[Float] = {
     val means = new ArrayBuffer[Float]
     for (i <- 0 until a.size) {
@@ -151,8 +156,24 @@ object KMeans {
     return means.toList
   }
 
-  def getAverage(a: Float, b:Float) : Float = {
+  /*def getAverage(a: Float, b:Float) : Float = {
     return ((a+b)/2)
+  }*/
+
+  def getMeanVector(a: Array[Float], b: Array[Float], m: Int) : Array[Float] = {
+    var means = new Array[Float](m)
+    for (i <- 0 until m) {
+      means(m) = (a(m) + b(m)) / 2
+    }
+    means
+  }
+
+  def convertRow(row : Row, m: Int) : Array[Float] = {
+    var dataArray = new Array[Float](m)
+    for (i <- 0 until m) {
+      dataArray(m) = row.getInt(m).toFloat
+    }
+    dataArray
   }
 
 }
