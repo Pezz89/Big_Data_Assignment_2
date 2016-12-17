@@ -28,8 +28,10 @@ object KMeans {
 
     var centres: Array[Float] = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
     //To reduce chance of two random centres being the same, add i to each
+    println("centres initialised")
     for (i <- 0 until K) {
       centres(i) += i
+      println("centre " + i + " = " + centres(i) )
     }
 
     /*var centres : ArrayBuffer[Float] = new ArrayBuffer[Float](K)
@@ -47,7 +49,9 @@ object KMeans {
 
     for (i <- 0 until iterations) {
       centres = clustering(centres, rowsAsArray, m, K)
-      centres.foreach(println)
+      for (i <- 0 until K) {
+        println("centre " + i + " = " + centres(i) )
+      }
     }
   }
 
