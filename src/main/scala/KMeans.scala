@@ -35,7 +35,7 @@ object KMeans {
       for (j <- 0 until m) {
         centres(i)(j) += i+j
       }
-      println("centre " + i + " = " + centres(i) )
+      println("centre " + i + " = " + centres(i).mkString("[",",","]") )
     }
 
     /*var centres : ArrayBuffer[Float] = new ArrayBuffer[Float](K)
@@ -53,8 +53,9 @@ object KMeans {
 
     for (i <- 0 until iterations) {
       centres = clustering(centres, rowsAsArray, m, K)
-      for (i <- 0 until K) {
-        println("centre " + i + " = " + centres(i) )
+      println("\niteration " + i + " :")
+      for (j <- 0 until K) {
+        println("centre " + j + " = " + centres(j).mkString("[",",","]") )
       }
     }
   }

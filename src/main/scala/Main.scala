@@ -16,6 +16,7 @@ object Main {
   // spark cluster
   val sc = new SparkContext(new SparkConf().setAppName("Spark KMeans Clustering"))
   val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+  sc.setLogLevel("WARN") //reduce spark command line verbosity
 
   import sqlContext.implicits._
 
@@ -29,7 +30,7 @@ object Main {
     // get the users XML file
 
     val users = df("users")
-    val centres = KMeans.train(users, 3)
+    val centres = KMeans.train(users, 6)
     //val centresArray = centres.collect()
     //val unwrap = centresArray.map(x => x._2)
     //unwrap.foreach(println)
