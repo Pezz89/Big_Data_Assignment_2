@@ -163,7 +163,7 @@ object KMeans {
   def getMeanVector(a: Array[Float], b: Array[Float], m: Int) : Array[Float] = {
     var means = new Array[Float](m)
     for (i <- 0 until m) {
-      means(m) = (a(m) + b(m)) / 2
+      means(i) = (a(i) + b(i)) / 2
     }
     means
   }
@@ -171,7 +171,7 @@ object KMeans {
   def convertRow(row : Row, m: Int) : Array[Float] = {
     var dataArray = new Array[Float](m)
     for (i <- 0 until m) {
-      dataArray(m) = row.getInt(m).toFloat
+      dataArray(i) = row.getInt(i).toFloat
     }
     dataArray
   }
