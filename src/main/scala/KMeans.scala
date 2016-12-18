@@ -32,6 +32,11 @@ object KMeans {
 
     for (i <- 0 until iterations) {
       centres = clustering(centres, rowsAsArray, m, K)
+      if (centres == null) {
+        println("Error, starting again")
+        train(dataset, iterations)
+        return
+      }
       println("\niteration " + i + " :")
       for (j <- 0 until K) {
         println("centre " + j + " = " + centres(j).mkString("[",",","]") )
@@ -49,7 +54,13 @@ object KMeans {
     for ((i,x) <- arrayNewCentres) {
       results(i) = x
     }
-    results
+    //Check all results are valid (no null)
+    for (i <- 0 until K) {
+      if (results(i) == null) {
+        return null
+      }
+    }
+    return results
   }
 
 
