@@ -45,7 +45,7 @@ object KMeans {
     val newCentres = clusterMap.reduceByKey((a,b) => getMeanVector(a,b,m))
     val arrayNewCentres = newCentres.collect()
 
-    var results = new Array[Array[Float]](m)
+    var results = new Array[Array[Float]](K)
     for ((i,x) <- arrayNewCentres) {
       results(i) = x
     }
