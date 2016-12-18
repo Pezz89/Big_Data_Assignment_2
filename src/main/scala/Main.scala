@@ -30,7 +30,7 @@ object Main {
     // get the users XML file
 
     val users = df("users")
-    val centres = KMeans.train(users, 2)
+    val centres = KMeans.train(users, 25)
     //val centresArray = centres.collect()
     //val unwrap = centresArray.map(x => x._2)
     //unwrap.foreach(println)

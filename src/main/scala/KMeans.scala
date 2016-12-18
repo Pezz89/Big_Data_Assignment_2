@@ -12,9 +12,9 @@ object KMeans {
 
 
   def train(dataset : DataFrame, iterations:Int) : Unit = {
-    val K = 4
-    val m = 2
-    val relevantData = dataset.select("Reputation", "Views")
+    val K = 10
+    val m = 4
+    val relevantData = dataset.select("Reputation", "Views", "UpVotes", "DownVotes")
     val rows = relevantData.rdd
     val rowsAsArray = rows.map(row => convertRow(row, m)).persist()
 
