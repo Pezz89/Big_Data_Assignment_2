@@ -16,7 +16,7 @@ object KMeans {
     val m = 2
     val relevantData = dataset.select("Reputation", "Views")
     val rows = relevantData.rdd
-    val rowsAsArray = rows.map(row => convertRow(row, m)).persist()
+    val rowsAsArray = rows.map(row => convertRow(row, m))
 
 
     var centres: Array[Array[Float]] = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
