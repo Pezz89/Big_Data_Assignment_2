@@ -3,7 +3,6 @@ package ClusterSOData
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql._
 
-import scala.collection.mutable.ArrayBuffer
 
 object KMeans {
   /**
@@ -51,24 +50,6 @@ object KMeans {
     }
   }
 
-
-  /*def clustering(centres :Array[Array[Float]], rowsAsArray : RDD[Array[Float]], m : Int, K : Int) : Array[Array[Float]] = {
-    val clusterMap :RDD[(Int,Array[Float])]= rowsAsArray.map(row => (assignCluster(row,centres,m,K),row)).persist()
-    val newCentres = clusterMap.reduceByKey((a,b) => getMeanVector(a,b,m))
-    val arrayNewCentres = newCentres.collect()
-
-    var results = new Array[Array[Float]](K)
-    for ((i,x) <- arrayNewCentres) {
-      results(i) = x
-    }
-    //Check all results are valid (no null)
-    for (i <- 0 until K) {
-      if (results(i) == null) {
-        return null
-      }
-    }
-    return results
-  }*/
 
   def clustering(centres :Array[Array[Float]], rowsAsArray : RDD[Array[Float]], m : Int, K : Int) : RDD[(Int,Array[Float])] = {
     val clusterMap :RDD[(Int,Array[Float])]= rowsAsArray.map(row => (assignCluster(row,centres,m,K),row))
