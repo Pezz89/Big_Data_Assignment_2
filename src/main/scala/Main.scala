@@ -8,6 +8,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql._
 import org.apache.spark.sql.types._
 
+import com.databricks.spark.xml.XmlReader;
 /* 
  * Run KMeans clustering on the StackOverflow dataset
  */
@@ -27,10 +28,16 @@ object Main {
   def main(args: Array[String]) {
     // Retrieve data from StackOverflow dataset XMLs. Format into DataFrames
     // for easy access to data elements.
-    val dataFrames = DataParser.ParseData()
-    val a = dataFrames("users")
-    a.persist()
-
+    //val dataFrames = DataParser.ParseData()
+    val customSchema = StructType(Array(
+    StructField("_Reputation", StringType, nullable = true)))
+    val localxml="../stackoverflow_dataset/users.txt";
+    val booksFileTag = "row";
+    val df = sqlContext.read
+        .format("com.databricks.spark.xml")
+        .load(localxml)
+        .schema(customSchema)
+    df.printSchema();
     // get the users XML file
     //val users = dataFrames("users")
     //users.persist()
@@ -44,7 +51,7 @@ object Main {
 
     // create new dataframe with only the reputation of the users
     //val a = users.select("Reputation").rdd.map(r => r(0)).persist()
-    a.take(2).foreach(f => println(f(1)))
+
     
     
 
