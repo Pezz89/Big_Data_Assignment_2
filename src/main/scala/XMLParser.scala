@@ -11,15 +11,7 @@ import org.apache.spark.sql.types._
 
 import scala.xml.Elem
 import scala.xml.factory.XMLLoader
-import javax.xml.parsers.SAXParser
-object MyXML extends XMLLoader[Elem] {
-  override def parser: SAXParser = {
-    val f = javax.xml.parsers.SAXParserFactory.newInstance()
-    f.setNamespaceAware(false)
-    f.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-    f.newSAXParser()
-  }
-}
+import scala.xml._
 
 /* 
  * Format and parse XML data to datasets, ready for further processing using
@@ -42,7 +34,7 @@ object DataParser {
       ("postHistory", "/data/stackoverflow/PostHistory","Id PostHistoryTypeId PostId RevisionGUID CreationDate UserId UserDisplayName Comment Text CloseReasonId", Array[DataType](IntegerType, IntegerType, IntegerType,IntegerType, DateType, IntegerType, StringType, StringType, StringType, IntegerType)),
       ("postLinks", "data/stackoverflow/PostLinks", "Id CreationDate PostId RelatedPostId PostLinkTypeId", Array[DataType](IntegerType, DateType, IntegerType, IntegerType, IntegerType)),
       */
-      ("users", "/Users/Work/o/Big_Data_Assignment_2/stackoverflow_dataset/users.txt", "Reputation CreationDate DisplayName EmailHash LastAccessDate WebsiteUrl Location Age AboutMe Views UpVotes DownVotes", Array[DataType](IntegerType, DateType, StringType, StringType, DateType, StringType, StringType, IntegerType, StringType, IntegerType, IntegerType, IntegerType))
+      ("users", "../stackoverflow_dataset/users.txt", "Reputation CreationDate DisplayName EmailHash LastAccessDate WebsiteUrl Location Age AboutMe Views UpVotes DownVotes", Array[DataType](IntegerType, DateType, StringType, StringType, DateType, StringType, StringType, IntegerType, StringType, IntegerType, IntegerType, IntegerType))
       /*
       ("votes", "/data/stackoverflow/Votes", "Id PostId VoteTypeId UserId CreationDate", Array[DataType](IntegerType, IntegerType, IntegerType, IntegerType, DateType))
       */
@@ -114,7 +106,7 @@ object DataParser {
 
   private def ParsingFunc(line: String, schemaString: String, schemaType: Array[DataType]) : Row = {
     // Parse line of XML using Scala's built in XML library
-    val xmlLine = MyXML.loadString(line)
+    val xmlLine = XML.loadString(line)
     var schemaPairs = schemaString.split(" ") zip schemaType
     // Create array of values with element for each attribute in schemaString
     var lineData = schemaPairs.map { case (fieldName: String, dType: DataType) => castToDType(getXMLAttribute(xmlLine, fieldName), dType) }
