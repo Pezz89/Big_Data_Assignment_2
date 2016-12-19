@@ -11,13 +11,13 @@ object KMeans {
 
 
   def train(dataset : DataFrame, iterations:Int) : Unit = {
-    val K = 4 // Number of desired clusters
-    val relevantData = dataset.select("Reputation", "LastAccessDate")
+    val K = 8 // Number of desired clusters
+    val relevantData = dataset.select("Reputation", "UpVotes", "DownVotes", "CreationDate", "LastAccessDate")
     val m = relevantData.columns.length  //number of features
     val rows = relevantData.rdd
     val rowsAsArray = rows.map(row => convertRow(row, m)).persist()
 
-
+    //Initialise the centres by taking a random sample
     var centres: Array[Array[Float]] = rowsAsArray.takeSample(false, K, System.nanoTime().toInt)
     //To reduce chance of two random centres being the same, add a changing value to each
     println("centres initialised")
@@ -30,6 +30,7 @@ object KMeans {
 
     var counts = Array[Int](K)
 
+    //Iterate through the clustering algorithm
     for (i <- 0 until iterations) {
       val clusterMap = clustering(centres, rowsAsArray, m, K).persist()
       centres = getCentres(clusterMap, m, K)
@@ -90,9 +91,6 @@ object KMeans {
     }
     return counts
   }
-
-
-
 
 
     def calculateNorm(datapoint : Array[Float], centre : Array[Float], m: Int): Double = {

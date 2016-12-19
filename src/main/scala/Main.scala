@@ -30,28 +30,6 @@ object Main {
     // get the users XML file
 
     val users = df("users")
-    val centres = KMeans.train(users, 25)
-    //val centresArray = centres.collect()
-    //val unwrap = centresArray.map(x => x._2)
-    //unwrap.foreach(println)
+    val centres = KMeans.train(users, 50)
   }
 }
-
-    //val users = dataFrames("users")
-
-    /*val dataFrames = DataParser.ParseData()
-
-    // get the users XML file
-    val users = dataFrames("users")
-    users.persist()
-    // Show 20 entries from the user dataset
-    users.show()
-    // Show types for the user dataset
-    users.printSchema()
-    users.show()
-
-    // create new dataframe with only the reputation of the users
-    users.select("CreationDate").show()
-*/
-    // Info on using DataFrames here: https://www.mapr.com/blog/using-apache-spark-dataframes-processing-tabular-data
-
