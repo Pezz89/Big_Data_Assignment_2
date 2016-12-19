@@ -17,7 +17,7 @@ import scala.xml._
  * Format and parse XML data to datasets, ready for further processing using
  * spark
  */
-object DataParser {
+object XMLParser {
 
   /*
    * Generate array of DataFrames from XML content
@@ -34,7 +34,7 @@ object DataParser {
       ("postHistory", "/data/stackoverflow/PostHistory","Id PostHistoryTypeId PostId RevisionGUID CreationDate UserId UserDisplayName Comment Text CloseReasonId", Array[DataType](IntegerType, IntegerType, IntegerType,IntegerType, DateType, IntegerType, StringType, StringType, StringType, IntegerType)),
       ("postLinks", "data/stackoverflow/PostLinks", "Id CreationDate PostId RelatedPostId PostLinkTypeId", Array[DataType](IntegerType, DateType, IntegerType, IntegerType, IntegerType)),
       */
-      ("users", "../stackoverflow_dataset/users.txt", "Reputation CreationDate DisplayName EmailHash LastAccessDate WebsiteUrl Location Age AboutMe Views UpVotes DownVotes", Array[DataType](IntegerType, DateType, StringType, StringType, DateType, StringType, StringType, IntegerType, StringType, IntegerType, IntegerType, IntegerType))
+      ("users", "stackoverflow_dataset/users.txt", "Reputation CreationDate DisplayName EmailHash LastAccessDate WebsiteUrl Location Age AboutMe Views UpVotes DownVotes", Array[DataType](IntegerType, DateType, StringType, StringType, DateType, StringType, StringType, IntegerType, StringType, IntegerType, IntegerType, IntegerType))
       /*
       ("votes", "/data/stackoverflow/Votes", "Id PostId VoteTypeId UserId CreationDate", Array[DataType](IntegerType, IntegerType, IntegerType, IntegerType, DateType))
       */
@@ -128,10 +128,13 @@ object DataParser {
           // In this case, return a placeholder value of -1.
           case e: Exception => return -1
         }
-      case DateType => 
-        // If the string is a date, convert from date string to long.
+      case DateType => return attribute
+        /*// If the string is a date, convert from date string to long.
         var format = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
-        return format.parse(attribute).getTime() 
+        var longTime = format.parse(attribute).getTime()
+        // Then convert long to int representing days since epoch
+        var longDays : Long = longTime / (1000*60*60*24)
+        return longDays.toInt*/
     }
   }
 

@@ -1,5 +1,8 @@
 .DS_Store
 bin/
+target/
+.idea/
+stackoverflow_dataset/
 # Compiled Object files
 *.slo
 *.lo
