@@ -11,8 +11,8 @@ object KMeans {
 
 
   def train(dataset : DataFrame, iterations:Int) : Unit = {
-    val K = 10 // Number of desired clusters
-    val relevantData = dataset.select("Reputation", "Views", "UpVotes", "DownVotes")
+    val K = 4 // Number of desired clusters
+    val relevantData = dataset.select("Reputation", "LastAccessDate")
     val m = relevantData.columns.length  //number of features
     val rows = relevantData.rdd
     val rowsAsArray = rows.map(row => convertRow(row, m)).persist()

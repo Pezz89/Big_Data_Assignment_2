@@ -62,7 +62,7 @@ object XMLParser {
    */
   private def GenerateSchemaFromString(schemaString: String, schemaType: Array[DataType]) : StructType = {
     // Replace all DateTypes with Longs as date will now be stored as longs.
-    val sT = schemaType.map(i => if (i==DateType) LongType else i)
+    val sT = schemaType.map(i => if (i==DateType) IntegerType else i)
     val schemaPairs = schemaString.split(" ") zip sT
 
     // Create schema for columns and set their datatypes for DataFrame based on attribute names.
