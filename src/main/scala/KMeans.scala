@@ -28,15 +28,17 @@ object KMeans {
       println("centre " + i + " = " + centres(i).mkString("[",",","]") )
     }
 
-
     var counts = Array[Int](K)
-
-
 
     for (i <- 0 until iterations) {
       val clusterMap = clustering(centres, rowsAsArray, m, K).persist()
       centres = getCentres(clusterMap, m, K)
       counts = getCounts(clusterMap, K)
+      //At last iteration, save clustering results to file on hadoop fs
+      if (i == iterations -1) {
+        val printableResults = clusterMap.map(x => (x._1, x._2.mkString(",")))
+        printableResults.saveAsTextFile("spark_output/results.txt")
+      }
       clusterMap.unpersist()
       if (centres == null || counts == null) {
         println("Error, starting again")
@@ -82,7 +84,7 @@ object KMeans {
       counts(i) = x
     }
     for (i <- 0 until K) {
-      if (counts(i) == null) {
+      if (counts(i) == 0) {
         return null
       }
     }
